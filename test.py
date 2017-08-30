@@ -29,19 +29,21 @@ def combinations(coordinates,energies):
 	output = []
 	counter = 0
 	for matrix in coordinates:
+		vector = []
 		for i in range(3):
+			
 			if i == 0: 
 				dist1 = distance(matrix[i],matrix[i+1])
-				dist2 = distance(matrix[i],matrix[i+2])	
-				data.append(dist1)
-				output.append(energies[counter])
-				data.append(dist2)
-				output.append(energies[counter])
-			
+				dist2 = distance(matrix[i],matrix[i+2])
+				vector.append(dist1)
+				vector.append(dist2)	
+				
 			if i == 1:
 				dist1 = distance(matrix[i],matrix[i+1])
-				data.append(dist1)
-				output.append(energies[counter])
+				vector.append(dist1)
+		data.append(vector)
+		output.append(energies[counter])
+
 		counter += 1
 	return data,output
 
@@ -65,21 +67,26 @@ coordinates = extract_mol(adl)[0]
 energies = extract_mol(adl)[1]
 data = combinations(coordinates,energies)[0]
 output = combinations(coordinates,energies)[1]
-final_data = []
-final_output = []
-final_data.append(data)
-final_output.append(output)
+
+
+#final_data = []
+#final_output = []
+#final_data.append(data)
+#final_output.append(output)
+
 # Closes the H5 data file
 adl.cleanup()
 
 
-x = Variable(torch.FloatTensor(final_data))
-y = Variable(torch.FloatTensor(final_output),requires_grad=False)
+
+
+x = Variable(torch.FloatTensor(data))
+y = Variable(torch.FloatTensor(output),requires_grad=False)
 
 
 
 model = torch.nn.Sequential(
-          torch.nn.Linear(2721,2721),
+          torch.nn.Linear(3,1),
         )
 
 """
@@ -98,6 +105,8 @@ for t in range(50000):
   y_pred = model(x)
 
   loss = loss_fn(y_pred, y)
+
+  #print(y_pred.size())
   print(t, loss.data[0])
   
   model.zero_grad()
