@@ -2,7 +2,13 @@ import pyanitools as pya
 import torch
 import math
 from torch.autograd import Variable
+import matplotlib.pyplot as plt
+import numpy as np
 
+def changeHA(x):
+	final = x * 627.509469
+
+	return final
 def extract_mol(adl):
 	i = 0
 	contador = 0
@@ -84,33 +90,37 @@ x = Variable(torch.FloatTensor(data))
 y = Variable(torch.FloatTensor(output),requires_grad=False)
 
 
-
 model = torch.nn.Sequential(
-          torch.nn.Linear(3,1),
+	torch.nn.Linear(3,1),
         )
 
-"""
-model = torch.nn.Sequential(
-          torch.nn.Linear(2721,1),
-          torch.nn.ReLU(),
-          torch.nn.Linear(1,2721),
-        )
-"""
 
 loss_fn = torch.nn.MSELoss(size_average=False)
 
 
 learning_rate = 1e-4
+coordx=[]
+coordy=[]
 for t in range(50000):
   y_pred = model(x)
-
+  print(y_pred.data)
   loss = loss_fn(y_pred, y)
 
-  #print(y_pred.size())
-  print(t, loss.data[0])
+  #print(t,loss.data[0])
+
+  coordx.append(t)
+  coordy.append(math.log10(changeHA(loss.data[0])))
+
   
   model.zero_grad()
   loss.backward()
 
   for param in model.parameters():
     param.data -= learning_rate * param.grad.data
+
+plt.plot(coordx,coordy)
+plt.axis(ymin=0)
+
+#print(max(coordy),min(coordy))
+#print(max(coordy) - min(coordy))
+plt.show()
