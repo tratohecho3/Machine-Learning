@@ -103,10 +103,10 @@ coordx=[]
 coordy=[]
 for t in range(50000):
   y_pred = model(x)
-  print(y_pred.data)
+  #print(y_pred.data)
   loss = loss_fn(y_pred, y)
 
-  #print(t,loss.data[0])
+  print(t,loss.data[0])
 
   coordx.append(t)
   coordy.append(math.log10(changeHA(loss.data[0])))
