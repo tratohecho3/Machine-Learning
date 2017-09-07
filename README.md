@@ -7,4 +7,7 @@ prueba.py: <br>
 prueba2.py: <br>
   -Training error = 1.55 <br>
   -Test error = 0.56 <br>
-  
+
+loader.py: <br>
+  -Training error = 1.56 <br>
+  -Test error = 0.61 <br>
