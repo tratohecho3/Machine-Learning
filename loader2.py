@@ -74,7 +74,7 @@ def distance(vector1,vector2):
 	
 
 # Set the HDF5 file containing the data
-hdf5file = 'gdb11_S01_06r.h5'
+hdf5file = '/home/jujuman/Research/GDB-11-AL-wB97x631gd/gdb11_h5/gdb11_S01_06r.h5'
 
 # Construct the data loader class
 adl = pya.anidataloader(hdf5file)
@@ -84,6 +84,10 @@ energies = extract_mol(adl)[1]
 data = combinations(coordinates,energies)[0]
 output = combinations(coordinates,energies)[1]
 
+X1 = coordinates[9]
+d1 = np.linalg.norm(X1[0]-X1[1])
+d2 = np.linalg.norm(X1[0]-X1[2])
+d3 = np.linalg.norm(X1[1]-X1[2])
 
 #final_data = []
 #final_output = []
@@ -95,40 +99,55 @@ adl.cleanup()
 
 training_set,test_set,output_training,output_test = ten_percent(data,output)
 
+output_training = np.array(output_training)
+mn = output_training.min()
+
+output_training = output_training - mn
+output_test = np.array(output_test) - mn
 
 x = Variable(torch.FloatTensor(training_set))
 y = Variable(torch.FloatTensor(output_training),requires_grad=False)
 
-model = torch.nn.Sequential(
-	torch.nn.Linear(3,16),
-	torch.nn.ReLU(),
-	torch.nn.Linear(16,1),
-        )
+print('Max dE:',changeHA(np.abs(output_training.min()-output_training.max())))
 
+
+model = torch.nn.Sequential(
+	torch.nn.Linear(3,4),
+	torch.nn.Tanh(),
+	torch.nn.Linear(4, 4),
+	torch.nn.Tanh(),
+	torch.nn.Linear(4,1),
+        )
 
 loss_fn = torch.nn.MSELoss(size_average=False)
 
-
-learning_rate = 1e-4
+learning_rate = 0.001
 coordx=[]
 coordy=[]
-for t in range(50000):
-  y_pred = model(x)
+idx = np.arange(y.size()[0])
+bs = 10
+for t in range(1000):
+	np.random.shuffle(idx)
 
-  loss = loss_fn(y_pred, y)
+	for b in range(int(np.floor(y.size()[0]/10))):
 
-  print(t,loss.data[0])
-  #print(t,math.log10(changeHA(loss.data[0])))
-  coordx.append(t)
+		bidx = Variable(torch.LongTensor(idx[b:b*bs]), requires_grad=False)
+		y_pred = model(x[bidx])
+		#print(y_pred[1])
+		loss = loss_fn(y_pred, y[bidx])
 
-  coordy.append(loss.data[0])
-  #coordy.append(math.log10(changeHA(loss.data[0])))
-  
-  model.zero_grad()
-  loss.backward()
+		print(t, changeHA(np.mean(np.abs(y_pred.data.numpy() - y.data.numpy()))))
+		#print(t,math.log10(changeHA(loss.data[0])))
+		coordx.append(t)
 
-  for param in model.parameters():
-    param.data -= learning_rate * param.grad.data
+		coordy.append(loss.data[0])
+		#coordy.append(math.log10(changeHA(loss.data[0])))
+
+		model.zero_grad()
+		loss.backward()
+
+		for param in model.parameters():
+			param.data -= learning_rate * param.grad.data
 
 
 plt.plot(coordx,coordy)
@@ -143,29 +162,13 @@ plt.show()
 x = Variable(torch.FloatTensor(test_set))
 y = Variable(torch.FloatTensor(output_test),requires_grad=False)
 
-coordx=[]
-coordy=[]
-for t in range(50000):
-  y_pred = model(x)
+y_pred = model(x)
 
-  loss = loss_fn(y_pred, y)
+print(changeHA(np.mean(np.abs(y_pred.data.numpy() - y.data.numpy()))))
 
-  print(t,loss.data[0])
-  #print(t,math.log10(changeHA(loss.data[0])))
-  coordx.append(t)
-
-  coordy.append(loss.data[0])
-  #coordy.append(math.log10(changeHA(loss.data[0])))
-  
-  model.zero_grad()
-  loss.backward()
-
-  for param in model.parameters():
-    param.data -= learning_rate * param.grad.data
-
-
-plt.plot(coordx,coordy)
-plt.axis(ymin=0, ymax=0.5)
+plt.plot(y.data.numpy(), y.data.numpy())
+plt.scatter(y.data.numpy(),y_pred.data.numpy())
+#plt.axis(ymin=0, ymax=0.5)
 #plt.axis(ymin=0, ymax=15000)
 
 #print(max(coordy),min(coordy))
