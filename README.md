@@ -11,3 +11,7 @@ prueba2.py: <br>
 loader.py: <br>
   -Training error = 1.56 <br>
   -Test error = 0.61 <br>
+
+loader2.py: <br>
+  -Training error = 0.058 <br>
+  -Test error = 0.065 <br>
