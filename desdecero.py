@@ -121,8 +121,11 @@ output_training = [[1.7], [2.76], [2.09], [3.19], [1.694], [1.573],
 #training_set = rellenar(training_set)
 #training_set = vaciar(training_set)
 
+#INPUT #6
+training_set,output_training = cos()
+
 #PARAMETERS
-input_size = 3
+input_size = 1
 output_size = 1
 hidden_size = 3
 num_epochs = 750
@@ -170,35 +173,7 @@ for epoch in range(num_epochs):
 x_test = Variable(torch.FloatTensor(training_set))
 predicted = model(x_test)
 
-"""
-plt.plot(output_training, output_training, 'ro', label='Original data')
-#plt.plot(training_set, predicted, label='Fitted line')
-plt.legend()
-plt.show()
-"""
 
-
-"""
-plt.plot(y.data.numpy(), x.data.numpy())
-plt.scatter(y.data.numpy(),predicted.data.numpy())
-plt.show()
-"""
-#print(y_pred.data.numpy())
-
-
-
-
-"""
-plt.plot(output_training,output_training)
-plt.scatter(output_training,y_pred.data.numpy())
-plt.show()
-"""
-#print(output_training)
-print('')
-#print(predicted.data.numpy())
-
-#plt.plot([np.asarray(output_training).min(),np.asarray(output_training).max()],[np.asarray(output_training).min(),np.asarray(output_training).max()])
-#print(len(output_training))
-#plt.scatter(output_training,[1.7,2.76,2.09,3.19,1.694,1.573,3.366,2.596,2.53,1.221,2.827,3.465,1.65,2.904,1.3])
+plt.plot([np.asarray(output_training).min(),np.asarray(output_training).max()],[np.asarray(output_training).min(),np.asarray(output_training).max()])
 plt.scatter(output_training,[predicted.data.numpy()])
 plt.show()
