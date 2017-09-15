@@ -170,10 +170,10 @@ for epoch in range(num_epochs):
 	optimizer.step()
 	print(epoch,loss.data[0])
 
-x_test = Variable(torch.FloatTensor(training_set))
+x_test = Variable(torch.FloatTensor(test_set))
 predicted = model(x_test)
 
 
 plt.plot([np.asarray(output_training).min(),np.asarray(output_training).max()],[np.asarray(output_training).min(),np.asarray(output_training).max()])
-plt.scatter(output_training,[predicted.data.numpy()])
+plt.scatter(output_test,[predicted.data.numpy()])
 plt.show()
