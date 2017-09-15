@@ -61,17 +61,6 @@ def distance(vector1,vector2):
 
 	return distance
 
-hdf5file = 'gdb11_S01_06r.h5'
-adl = pya.anidataloader(hdf5file)
-coordinates,output_training = extract_mol(adl)
-training_set = combinations(coordinates)
-
-adl.cleanup()
-
-#DATA SET
-training_set,test_set,output_training,output_test = ten_percent(training_set,output_training)
-
-
 #FUNCTIONS TO TEST OTHER INPUT TRAINING
 def rellenar(x):
 	for i in range(len(x)):
@@ -100,6 +89,30 @@ def f(x,y):
 	z = y*math.sin(x)
 	return z
 
+#NEURAL NETWORK
+class LinearRegression(nn.Module):
+	def __init__(self,input_size,output_size,hidden_size):
+		super(LinearRegression,self).__init__()
+		self.linear = nn.Linear(input_size,hidden_size)
+		self.linear2 = nn.Linear(hidden_size,output_size)
+		
+
+	def forward(self,x):
+		out = self.linear(x)
+		out = F.relu(out)
+		out = self.linear2(out)
+
+		return out
+
+
+
+hdf5file = 'gdb11_S01_06r.h5'
+adl = pya.anidataloader(hdf5file)
+coordinates,output_training = extract_mol(adl)
+training_set = combinations(coordinates)
+adl.cleanup()
+#DATA SET
+training_set,test_set,output_training,output_test = ten_percent(training_set,output_training)
 	
 #INPUT #2
 #training_set,output_training = other_function()
@@ -131,20 +144,6 @@ hidden_size = 3
 num_epochs = 750
 learning_rate = 0.01
 
-#NEURAL NETWORK
-class LinearRegression(nn.Module):
-	def __init__(self,input_size,output_size,hidden_size):
-		super(LinearRegression,self).__init__()
-		self.linear = nn.Linear(input_size,hidden_size)
-		self.linear2 = nn.Linear(hidden_size,output_size)
-		
-
-	def forward(self,x):
-		out = self.linear(x)
-		out = F.relu(out)
-		out = self.linear2(out)
-
-		return out
 
 
 #MODEL,LOSS FUNCTION,OPTIMIZER
