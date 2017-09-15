@@ -111,8 +111,7 @@ adl = pya.anidataloader(hdf5file)
 coordinates,output_training = extract_mol(adl)
 training_set = combinations(coordinates)
 adl.cleanup()
-#DATA SET
-training_set,test_set,output_training,output_test = ten_percent(training_set,output_training)
+
 	
 #INPUT #2
 #training_set,output_training = other_function()
@@ -137,6 +136,8 @@ output_training = [[1.7], [2.76], [2.09], [3.19], [1.694], [1.573],
 #INPUT #6
 training_set,output_training = cos()
 
+#DATA SET
+training_set,test_set,output_training,output_test = ten_percent(training_set,output_training)
 #PARAMETERS
 input_size = 1
 output_size = 1
