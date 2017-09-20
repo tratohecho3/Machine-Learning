@@ -6,6 +6,10 @@ from torch.autograd import Variable
 import pyanitools as pya
 import math
 import torch.nn.functional as F
+import torch.nn.init as init
+
+
+
 def ten_percent(data,output):
 	ten_percent = int(len(data) * 0.1)	
 	training_set = data[ten_percent:]
@@ -94,7 +98,10 @@ class LinearRegression(nn.Module):
 	def __init__(self,input_size,output_size,hidden_size):
 		super(LinearRegression,self).__init__()
 		self.linear = nn.Linear(input_size,hidden_size)
+		init.xavier_uniform(self.linear.weight, gain=np.sqrt(2.0))
+		init.constant(self.linear.bias, 0)
 		self.linear2 = nn.Linear(hidden_size,output_size)
+		init.xavier_uniform(self.linear2.weight, gain=np.sqrt(2.0))
 		
 
 	def forward(self,x):
@@ -112,7 +119,6 @@ coordinates,output_training = extract_mol(adl)
 training_set = combinations(coordinates)
 adl.cleanup()
 
-	
 #INPUT #2
 #training_set,output_training = other_function()
 
@@ -134,46 +140,49 @@ output_training = [[1.7], [2.76], [2.09], [3.19], [1.694], [1.573],
 #training_set = vaciar(training_set)
 
 #INPUT #6
-training_set,output_training = cos()
+#training_set,output_training = cos()
 
 #DATA SET
 training_set,test_set,output_training,output_test = ten_percent(training_set,output_training)
+
+
 #PARAMETERS
-input_size = 1
+input_size = 3
 output_size = 1
-hidden_size = 3
-num_epochs = 750
+hidden_size = 6
+num_epochs = 5000
 learning_rate = 0.01
 
-
-
 #MODEL,LOSS FUNCTION,OPTIMIZER
-model = LinearRegression(input_size,output_size,hidden_size)		
+model = LinearRegression(input_size,output_size,hidden_size)
+
 criterion = nn.MSELoss()
 optimizer = torch.optim.SGD(model.parameters(),lr=learning_rate,momentum=0.9)
 
 
+
 #TRAINING
 for epoch in range(num_epochs):
-	x = Variable(torch.FloatTensor(training_set))
-
+	
+	x = Variable(torch.FloatTensor(training_set),requires_grad=True)
 
 	y = Variable(torch.FloatTensor(output_training))
 
 	#FORWARD,BACKWARD,OPTIMIZER
 	
 	y_pred = model(x)
-	
+		
 	loss = criterion(y_pred,y)
 	optimizer.zero_grad()
 	loss.backward()
 	optimizer.step()
 	print(epoch,loss.data[0])
+	
 
 x_test = Variable(torch.FloatTensor(test_set))
 predicted = model(x_test)
 
 
-plt.plot([np.asarray(output_training).min(),np.asarray(output_training).max()],[np.asarray(output_training).min(),np.asarray(output_training).max()])
+#plt.plot([np.asarray(output_training).min(),np.asarray(output_training).max()],[np.asarray(output_training).min(),np.asarray(output_training).max()])
 plt.scatter(output_test,[predicted.data.numpy()])
 plt.show()
