@@ -171,6 +171,7 @@ def main(estimator_,optimizer_,learning_rate,HU,activation_fn_):
 	print("optimizer:",optimizer_)
 	print("learning_rate:",learning_rate)
 	print("hidden_units:",HU)
+	print("act function", activation_fn_)
 	#plt.plot(y_eval,y_eval)
 	plt.scatter(y_eval,np.array(final))
 
@@ -258,6 +259,7 @@ def main_Adam(estimator_,optimizer_,learning_rate,HU,activation_fn_):
 	print("optimizer:",optimizer_)
 	print("learning_rate:",learning_rate)
 	print("hidden_units:",HU)
+	print("act function", activation_fn_)
 	#plt.plot(y_eval,y_eval)
 	plt.scatter(y_eval,np.array(final))
 
@@ -341,6 +343,7 @@ def main_RMS(estimator_,optimizer_,learning_rate,HU,activation_fn_):
 	print("optimizer:",optimizer_)
 	print("learning_rate:",learning_rate)
 	print("hidden_units:",HU)
+	print("act function", activation_fn_)
 	#plt.plot(y_eval,y_eval)
 	plt.scatter(y_eval,np.array(final))
 
@@ -359,8 +362,8 @@ def main_RMS(estimator_,optimizer_,learning_rate,HU,activation_fn_):
 estimators = [tf.estimator.LinearRegressor,tf.estimator.DNNRegressor]
 optimizers = [tf.train.GradientDescentOptimizer,tf.train.AdamOptimizer,tf.train.RMSPropOptimizer,tf.train.AdagradOptimizer,tf.train.AdadeltaOptimizer]
 learning_rates = [0.01,0.001,0.0001,0.00001]
-hidden_units = [[16,16]]
-activation_fn = [tf.tanh]
+hidden_units = [[12,12,4]]
+activation_fn = [tf.tanh,tf.sigmoid,tf.nn.elu,tf.nn.softplus,tf.nn.softsign,tf.nn.relu,tf.nn.relu6]
 
 
 for i in estimators:
@@ -376,3 +379,7 @@ for i in estimators:
 
 					elif j == tf.train.RMSPropOptimizer:
 						main_RMS(i,j,k,l,m)
+
+
+
+#main(tf.estimator.DNNRegressor,tf.train.GradientDescentOptimizer,0.01,[12,12],tf.tanh)
