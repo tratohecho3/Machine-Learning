@@ -99,15 +99,16 @@ def main(estimator_,optimizer_,learning_rate,HU,activation_fn_):
 
 	#DATA SET
 
-	training_set_shift = np.array(training_set).mean()
-	training_set = training_set - training_set_shift
+	#training_set_shift = np.array(training_set).mean()
+	#training_set = training_set - training_set_shift
 		
 	
 	training_set,test_set,output_training,output_test = ten_percent(training_set,output_training)
 
 
-	tf.nn.l2_normalize(training_set, 0, epsilon=1e-12)
-	tf.nn.l2_normalize(test_set, 0, epsilon=1e-12)
+	
+	#tf.nn.l2_normalize(training_set, 0, epsilon=1e-12)
+	#tf.nn.l2_normalize(test_set, 0, epsilon=1e-12)
 
 	feature_column_1 = tf.feature_column.numeric_column("x1")
 	feature_column_2 = tf.feature_column.numeric_column("x2")
@@ -189,15 +190,15 @@ def main_Adam(estimator_,optimizer_,learning_rate,HU,activation_fn_):
 
 	#DATA SET
 
-	training_set_shift = np.array(training_set).mean()
-	training_set = training_set - training_set_shift
+	#training_set_shift = np.array(training_set).mean()
+	#training_set = training_set - training_set_shift
 		
 	
 	training_set,test_set,output_training,output_test = ten_percent(training_set,output_training)
 
 
-	tf.nn.l2_normalize(training_set, 0, epsilon=1e-12)
-	tf.nn.l2_normalize(test_set, 0, epsilon=1e-12)
+	#tf.nn.l2_normalize(training_set, 0, epsilon=1e-12)
+	#tf.nn.l2_normalize(test_set, 0, epsilon=1e-12)
 
 	feature_column_1 = tf.feature_column.numeric_column("x1")
 	feature_column_2 = tf.feature_column.numeric_column("x2")
@@ -275,14 +276,15 @@ def main_RMS(estimator_,optimizer_,learning_rate,HU,activation_fn_):
 
 	#DATA SET
 
-	training_set_shift = np.array(training_set).mean()
-	training_set = training_set - training_set_shift
+	#training_set_shift = np.array(training_set).mean()
+	
+	#training_set = training_set - training_set_shift
 		
 	training_set,test_set,output_training,output_test = ten_percent(training_set,output_training)
 
 
-	tf.nn.l2_normalize(training_set, 0, epsilon=1e-12)
-	tf.nn.l2_normalize(test_set, 0, epsilon=1e-12)
+	#tf.nn.l2_normalize(training_set, 0, epsilon=1e-12)
+	#tf.nn.l2_normalize(test_set, 0, epsilon=1e-12)
 
 	feature_column_1 = tf.feature_column.numeric_column("x1")
 	feature_column_2 = tf.feature_column.numeric_column("x2")
@@ -362,7 +364,7 @@ def main_RMS(estimator_,optimizer_,learning_rate,HU,activation_fn_):
 estimators = [tf.estimator.LinearRegressor,tf.estimator.DNNRegressor]
 optimizers = [tf.train.GradientDescentOptimizer,tf.train.AdamOptimizer,tf.train.RMSPropOptimizer,tf.train.AdagradOptimizer,tf.train.AdadeltaOptimizer]
 learning_rates = [0.01,0.001,0.0001,0.00001]
-hidden_units = [[12,12,4]]
+hidden_units = [[32,32]]
 activation_fn = [tf.tanh,tf.sigmoid,tf.nn.elu,tf.nn.softplus,tf.nn.softsign,tf.nn.relu,tf.nn.relu6]
 
 

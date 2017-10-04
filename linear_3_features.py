@@ -62,29 +62,7 @@ def distance(vector1,vector2):
 
 	return distance
 #FUNCTIONS TO TEST OTHER INPUT TRAINING
-def rellenar(x):
-	for i in range(len(x)):
-		x[i] = [x[i][0],x[i][0],x[i][0]]
-	return x
-def vaciar(x):
-	for i in range(len(x)):
-		x[i] = [x[i][0]]
-	return x
-def cos():
-	training_data = np.random.random_sample((500,1))
-	output_data = []
-	for i in range(len(training_data)):
-		output_data.append(math.cos(training_data[i]))
-	output_data = np.array(output_data)
-	return training_data,output_data
-def other_function():
-	training_data = np.random.random_sample((2000,2))
-	output_data = []
-	for i in range(len(training_data)):
-		
-		output_data.append(f(training_data[i][0],training_data[i][1]))
-	
-	return training_data,output_data
+
 
 def solo_aqui(x):
 	x_train = []
@@ -96,16 +74,7 @@ def solo_aqui2(x):
 	for i in range(len(x)):
 		x_train.append(x[i][1])
 	return np.float32(x_train)
-def dividir(x):
-	vector1 = []
-	vector2 = []
-	vector3 = []
-	for i in range(len(x)):
-		vector1.append(x[i][0])
-		vector2.append(x[i][1])
-		vector3.append(x[i][2])
 
-	return np.array(vector1),np.array(vector2),np.array(vector3)
 def solo_aqui3(x):
 	x_train = []
 	for i in range(len(x)):
@@ -132,14 +101,6 @@ adl.cleanup()
 training_set,output_training  = function_3_variable()
 training_set,test_set,output_training,output_test = ten_percent(training_set,output_training)
 
-
-"""
-print(len(training_set),len(test_set),len(output_training),len(output_test))
-training_set = training_set[0:50]
-test_set = test_set[0:5]
-output_training = output_training[0:50]
-output_test = output_test[0:5]
-"""
 tf.nn.l2_normalize(training_set, 0, epsilon=1e-12)
 tf.nn.l2_normalize(test_set, 0, epsilon=1e-12)
 
@@ -149,13 +110,12 @@ feature_column_3 = tf.feature_column.numeric_column("x3")
 
 
 	
-#estimator = tf.estimator.LinearRegressor(feature_columns=[feature_column_1,feature_column_2,feature_column_3],optimizer=tf.train.GradientDescentOptimizer(0.0001))	
-#estimator = tf.estimator.DNNRegressor(feature_columns=[feature_column_1,feature_column_2,feature_column_3],optimizer=tf.train.GradientDescentOptimizer(0.01),hidden_units=[32])	
 estimator = tf.estimator.DNNRegressor(feature_columns=[feature_column_1,feature_column_2,feature_column_3],optimizer=tf.train.AdamOptimizer(learning_rate=0.01,beta1=0.9,beta2=0.999,epsilon=1e-08),hidden_units=[32,32], activation_fn=tf.tanh)	
 
 x_train_1 = solo_aqui(training_set)
 x_train_2 = solo_aqui2(training_set)
 x_train_3 = solo_aqui3(training_set)
+
 
 y_train = np.float32(output_training)
 
