@@ -34,16 +34,17 @@ if __name__ == "__main__":
 
 	t1 = time()
 	n = 1000000
-	big_batch = multiprocessing.Array('i',n)
-	p1 = threading.Thread(target=bb,args=(big_batch,))
+	big_batch = multiprocessing.Array('d',np.random.random_sample((n)))
+
+	#p1 = threading.Thread(target=bb,args=(big_batch,))
 	p2 = threading.Thread(target=generator,args=(big_batch,))
 	
 	generator = generator(big_batch)
 
 
-	p1.start()
+	#p1.start()
 	p2.start()
-	p1.join()
+	#p1.join()
 	p2.join()
 	
 	for i in generator:
